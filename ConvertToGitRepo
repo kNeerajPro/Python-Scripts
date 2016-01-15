@@ -1,0 +1,19 @@
+# This scripts convert a folder to a github repo.
+# Expects one to have setup SSH keys for the git account.
+# Command line parameters - <Folder path to convert to git repo>, <git username>, < git password>, <repo_name>
+
+import subprocess
+import sys
+
+for argument in sys.argv[1:] :
+	print argument
+proceed = raw_input("Press Y/N to proceed:")
+if proceed in ('y', 'Y'):
+	command = "cd %s;curl -u '%s:%s' https://api.github.com/user/repos -d '{\"name\" : \"%s\"}' " % (sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
+	print command
+	subprocess.call(command, shell = True)
+	post_repo_creation_command = "cd %s;git init;git add .;git commit -m \"first commit\"; git remote add origin git@github.com:%s/%s.git;git push origin master" % (sys.argv[1], sys.argv[2], sys.argv[4])
+	print post_repo_creation_command
+	subprocess.call(post_repo_creation_command, shell = True)
+	print "exiting...."
+	print exit(0)
